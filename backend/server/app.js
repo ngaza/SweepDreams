@@ -31,7 +31,15 @@ export async function createApp(db, adminKey) {
   const admin = (req,res,next) => req.headers.authorization === `Bearer ${adminKey}` ? next() : res.status(401).json({error:'Enter the correct administrator key.'});
   const requireAuth = (req,res,next) => req.user ? next() : res.status(401).json({error:'Please log in or sign up to book a clean.'});
   const publicBooking = b => {const {_id,token,userId,...safe}=b; return safe;};
-  app.get('/api/config', (req,res)=>res.json({prices,services,addons:Object.entries(addons).map(([id,a])=>({id,...a})),paymentMethods:payments,slots,checklist,today:dateToday(),demo:process.argv.includes('--demo')}));
+  app.get('/api/config', async (req, res) => {
+    const ratings = await bookings.aggregate([
+      {$match: {status: 'completed', 'feedback.rating': {$gte: 1, $lte: 5}}},
+      {$group: {_id: {$ifNull: ['$serviceId', 'basic']}, average: {$avg: '$feedback.rating'}, count: {$sum: 1}}},
+    ]).toArray();
+    const serviceRatings = Object.fromEntries(ratings.map(({_id, average, count}) => [_id, {average, count}]));
+    res.json({prices, services, serviceRatings, addons: Object.entries(addons).map(([id,a])=>({id,...a})),
+      paymentMethods: payments, slots, checklist, today: dateToday(), demo: process.argv.includes('--demo')});
+  });
   app.get('/api/availability', async(req,res,next)=>{try {
  const {date}=req.query;
  if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(Date.parse(date))||new Date(date).toISOString().slice(0,10)!==date||date<=dateToday())return res.status(400).json({error:'Choose a valid future date.'});
