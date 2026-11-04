@@ -1,0 +1,14 @@
+{
+  "name": "sweep-dreams",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "dev": "npm run dev -w backend",
+    "demo": "npm run demo -w backend",
+    "build": "npm run build -w frontend",
+    "test": "npm test -w backend"
+  },
+  "engines": { "node": ">=20.19" }
+}
