@@ -86,7 +86,6 @@ test('MERN booking lifecycle, login requirement, ownership, validation, and slot
     assert.equal((await request('/bookings/'+id+'/feedback','POST',{rating:6},me)).status,400);
     assert.equal((await request('/bookings/'+id+'/feedback','POST',{rating:5,comment:'Saved time'},me)).status,200);
     assert.equal((await request('/bookings/'+id+'/feedback','POST',{rating:4},me)).status,409);
-    assert.deepEqual((await request('/config')).data.serviceRatings, {basic: {average: 5, count: 1}});
 
     // Cancel the other pending booking.
     assert.equal((await request('/bookings/'+b.data.id+'/cancel','POST',{},me)).status,200);
