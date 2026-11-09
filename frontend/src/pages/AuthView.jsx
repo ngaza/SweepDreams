@@ -20,6 +20,7 @@ export default function AuthView({ mode, go, onSuccess, initialRole = "customer"
         body: JSON.stringify({ name, email, password, role }),
       });
       onSuccess(result.user);
+      if (result.user.role === "cleaner") go("cleaner");
     } catch (requestError) {
       setError(requestError.message);
     } finally {
