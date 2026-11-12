@@ -355,3 +355,23 @@ GitHub: https://github.com/pjrustia/sweep_dreams
 Developed collaboratively as a web application project using the MERN stack.
 
 **Sweep Dreams – We clean. You relax.**
+## Customer and cleaner accounts
+
+Signup and login use Customer and Worker selection buttons. Public signup creates customer accounts only; worker accounts are created by the administrator under Create worker account using a name, email and password. Worker passwords are hashed and account creation does not sign the administrator in as the worker. The role is checked on login; choosing another role at login does not change an account. Existing accounts without a role remain customers. Each email belongs to one account.
+
+Customers request and track cleans as before. Cleaners land on `#cleaner`, where they can search available future requests by address text, inspect the address, service, price and schedule, and choose **Accept booking**. The first successful acceptance confirms the request and assigns the signed-in cleaner. Customer names, contact details and instructions are shown to the assigned cleaner after acceptance. Customers can refresh their booking to see the assigned cleaner. Cleaners can complete only their own confirmed jobs after checking every cleaning checklist item. Customers can then leave feedback.
+
+Location filtering uses the supplied address text; it does not calculate GPS distance or automatically assign the nearest cleaner. The existing pilot limit of one confirmed/completed booking per date/time slot remains. The administrator booking desk remains available.
+
+To demonstrate, create a customer account and request a future clean. In another browser profile or private window, log in as Worker using credentials created in the administrator booking desk, open Cleaning jobs, search for the address, and accept the request. Refresh the customer's booking to see the cleaner. Complete the checklist as the cleaner, mark the visit complete, then refresh as the customer and submit feedback. Demo data resets when the demo server stops.
+
+The integration test also covers invalid roles, role mismatch at login, customer-only booking creation, cleaner-only job access, private request previews, concurrent acceptance, and completion by the assigned cleaner.
+
+
+## Worker progress and proof photos
+
+The administrator monitors bookings and can cancel pending or confirmed requests. Manual assignment and administrator completion are disabled; workers accept requests using their accounts. Each checklist change is saved immediately for the assigned worker. The administrator booking list polls every two seconds while open and displays read-only checklist progress and the uploaded proof photo.
+
+Workers upload one JPEG or PNG proof photo (up to 1 MB) per booking. The photo is saved with the booking in MongoDB and may be replaced while the booking is confirmed. Completing a booking requires all saved checklist items and a saved proof photo. Only the assigned worker may update progress, upload proof, or complete the visit. Photos are returned only through authenticated booking views; include only the cleaned area in proof photos.
+
+Proof photos are now linked to individual checklist tasks. Every task needs its own uploaded photo before completion. Admins see each photo below its corresponding task. JPEG/PNG originals up to 15 MB are accepted in the browser; originals above 1 MB are resized locally (starting at a 1920-pixel longest edge) and compressed to at most 1 MB per uploaded photo. Small originals are retained unchanged. Existing booking-level proof photos remain visible as previous proof but do not satisfy the per-task requirement for unfinished bookings.

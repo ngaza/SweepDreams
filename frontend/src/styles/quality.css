@@ -1,0 +1,412 @@
+/* Shared final accessibility and responsive refinements. */
+.nav {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.skip-link {
+  top: -100px;
+  transform: none;
+}
+.skip-link:focus {
+  top: 8px;
+}
+:root {
+  --muted: #635270;
+}
+p.muted,
+.fine,
+.lead,
+.demo {
+  color: var(--muted);
+}
+.availability-note {
+  grid-column: 1 / -1;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f0eaff;
+  color: #604682;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.loading-state {
+  padding: 60px 20px;
+  text-align: center;
+}
+.loading-state h1 {
+  font-size: 30px;
+}
+.categories button {
+  min-height: 44px;
+}
+.service-card:not(:disabled):hover {
+  border-color: #a38aff;
+  box-shadow: 0 8px 24px #4b2de912;
+}
+.screen-home .service-list {
+  grid-template-columns: 1fr;
+}
+.screen-home .service-card {
+  min-height: 130px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.screen-home .service-copy {
+  flex: 1;
+  width: auto;
+}
+.screen-home .chevron {
+  position: static;
+}
+input,
+select,
+textarea {
+  max-width: 100%;
+}
+.booking-heading {
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.lookup {
+  min-width: 0;
+}
+.lookup label {
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .screen-home .service-card {
+    padding: 28px;
+  }
+  .screen-home .service-icon {
+    width: 80px;
+    height: 80px;
+  }
+  .screen-home .service-copy strong {
+    font-size: 22px;
+  }
+  .screen-home .home-note {
+    background: #f0eaff;
+  }
+}
+@media (max-width: 767px) {
+  .screen-home .service-card {
+    padding: 20px 15px;
+  }
+  .nav {
+    min-height: 54px;
+  }
+  .screen-home .service-copy strong {
+    font-size: 15px;
+  }
+  .screen-home .chevron {
+    font-size: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.account-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 13px;
+}
+.account-nav a {
+  white-space: nowrap;
+  text-decoration: none;
+}
+.account-nav .primary {
+  padding: 12px 16px;
+}
+.account-nav span {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  max-width: 980px;
+  margin: 40px auto;
+  align-items: center;
+}
+.auth-intro h1 {
+  font-size: 42px;
+  color: #392659;
+}
+.auth-intro p {
+  color: #746384;
+}
+.auth-card {
+  padding: 32px;
+}
+.auth-card h1 {
+  font-size: 29px;
+  letter-spacing: -0.8px;
+  color: #4b2de9;
+}
+.auth-switch {
+  text-align: center;
+  font-size: 13px;
+  margin: 25px 0;
+}
+.auth-switch a {
+  color: #4b2de9;
+  font-weight: 700;
+}
+.account-bookings {
+  margin: 20px 0;
+}
+.account-booking {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  text-align: left;
+  gap: 8px;
+  margin: 10px 0;
+}
+.account-booking span {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+@media (min-width: 768px) {
+  header {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .account-nav {
+    margin-left: auto;
+  }
+}
+@media (max-width: 767px) {
+  header {
+    padding: 12px 20px;
+    background: white;
+    border-bottom: 1px solid #eee;
+  }
+  .account-nav {
+    justify-content: flex-end;
+  }
+  .account-nav span {
+    margin-right: auto;
+  }
+  .auth-layout {
+    display: block;
+    margin: 25px auto;
+    max-width: 450px;
+  }
+  .auth-intro {
+    display: none;
+  }
+  .auth-card {
+    padding: 24px;
+  }
+  .auth-card h1 {
+    font-size: 27px;
+    text-align: center;
+  }
+  .auth-card > .muted {
+    text-align: center;
+  }
+}
+
+.admin-login {
+  max-width: 480px;
+  margin: 45px auto;
+}
+.admin-login h1 {
+  font-size: 29px;
+}
+.admin-login > .secondary {
+  margin-top: 20px;
+}
+@media (max-width: 767px) {
+  header nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .screen-admin header nav {
+    grid-template-columns: 1fr;
+  }
+  .screen-admin-login header nav {
+    display: none;
+  }
+  .screen-admin-login main {
+    padding-bottom: 35px;
+  }
+  .screen-admin-login .account-nav span {
+    max-width: none;
+    font-size: 12px;
+  }
+  .screen-admin-login .account-nav {
+    gap: 10px;
+  }
+  .admin-login {
+    margin: 20px auto;
+  }
+  .screen-admin .account-nav {
+    flex-wrap: wrap;
+  }
+}
+
+.account-type {
+  margin: 20px 0;
+  border: 0;
+  padding: 0;
+}
+.account-type legend {
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+.role-buttons {
+  display: flex;
+  gap: 12px;
+}
+.role-buttons button {
+  flex: 1;
+  min-width: 0;
+}
+.worker-accounts {
+  margin: 24px 0;
+  padding: 24px;
+  border: 1px solid #ded7ef;
+  border-radius: 16px;
+}
+.worker-accounts h2 {
+  margin-top: 0;
+}
+
+.worker-directory {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #ded7ef;
+}
+.worker-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.worker-list li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: 16px;
+  background: #f8f5ff;
+  border: 1px solid #e7e0f5;
+  border-radius: 12px;
+}
+.worker-list li span {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.proof-photo {
+  margin: 20px 0;
+}
+.proof-photo img {
+  display: block;
+  max-width: 100%;
+  width: 420px;
+  max-height: 340px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+.proof-photo figcaption {
+  margin-top: 8px;
+  font-size: 0.875rem;
+}
+
+.checklist-task {
+  padding: 16px 0;
+  border-bottom: 1px solid #ded7ef;
+}
+.checklist-task:last-child {
+  border-bottom: 0;
+}
+.checklist-task > label:not(.check) {
+  margin-left: 0;
+  font-size: 0.9rem;
+}
+
+.booking-history {
+  margin-top: 32px;
+  border-top: 1px solid #ded7ef;
+  padding-top: 24px;
+}
+.booking-history > summary {
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 12px 0;
+}
+.booking-history > summary .pill {
+  margin-left: 8px;
+}
+.history-item {
+  margin-top: 12px;
+  border: 1px solid #ded7ef;
+  border-radius: 12px;
+  padding: 0 16px;
+  background: #fff;
+}
+.history-item > summary {
+  cursor: pointer;
+  padding: 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.history-summary {
+  display: grid;
+  gap: 5px;
+  flex: 1;
+  min-width: 160px;
+  overflow-wrap: anywhere;
+}
+.history-summary span,
+.history-summary small {
+  font-size: 0.875rem;
+  color: #655781;
+}
+.history-hint {
+  font-size: 0.875rem;
+  color: #5128ed;
+}
+.history-item .admin-booking {
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid #ded7ef;
+}
+.booking-history summary:focus-visible {
+  outline: 3px solid #a58cff;
+  outline-offset: 4px;
+}
+
+.brand-icon {
+  background: transparent;
+}
+
+/* Keep authentication branding stationary when switching account types. */
+html {
+  scrollbar-gutter: stable;
+}
+.auth-layout .auth-card > .muted {
+  min-height: 3.2em;
+}
+@media (min-width: 768px) {
+  .auth-layout .auth-intro {
+    align-self: start;
+    padding-top: 96px;
+  }
+}
