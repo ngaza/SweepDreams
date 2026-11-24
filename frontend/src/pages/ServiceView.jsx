@@ -1,0 +1,67 @@
+import React from "react";
+
+import { pesos } from "../utils/format.js";
+export default function ServiceView({ config, serviceId, go, setStep }) {
+  const s =
+    config.services.find((x) => x.id === serviceId) || config.services[0];
+  const included = s.included || config.checklist;
+  return (
+    <section className="detail-screen">
+      <button
+        className="back-button"
+        onClick={() => go("home")}
+        aria-label="Back to home"
+      >
+        ←
+      </button>
+      <div className="service-illustration" aria-hidden="true">
+        🧹<span>✧</span>
+      </div>
+      <div className="detail-copy">
+        <h1>{s.name}</h1>
+        <p className="detail-subtitle">{s.desc}</p>
+        <div className="service-price">
+          {pesos(s.sized ? config.prices.small : s.price)}{" "}
+          <span>
+            {s.sized ? "from · " : ""}
+            {s.hours}
+          </span>
+        </div>
+        <h3>What's included</h3>
+        <ul className="included">
+          {included.map((c) => (
+            <li key={c}>
+              <span>✓</span>
+              {c}
+            </li>
+          ))}
+        </ul>
+        {s.sized && (
+          <div className="callout">
+            <strong>Simple pricing</strong>
+            <p>
+              Small dorm up to 15 m²: {pesos(config.prices.small)}.<br />
+              Standard dorm 16–25 m²: {pesos(config.prices.standard)}.
+            </p>
+          </div>
+        )}
+        <p className="fine">
+          Optional add-ons at booking:{" "}
+          {config.addons
+            .map((a) => a.name + " (+" + pesos(a.price) + ")")
+            .join(", ")}
+          .
+        </p>
+        <button
+          className="primary wide"
+          onClick={() => {
+            setStep(1);
+            go("book");
+          }}
+        >
+          Book Now
+        </button>
+      </div>
+    </section>
+  );
+}
