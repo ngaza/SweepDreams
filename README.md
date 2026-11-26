@@ -12,7 +12,7 @@ The system also includes an administrative interface for managing customer booki
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB
 - **Development Tools:** npm, Git, GitHub
-- **Deployment Configuration:** Vercel
+- **Demo environment:** Local computer at `http://127.0.0.1:5173`
 
 ## Getting Started
 
@@ -29,13 +29,13 @@ Before running the application, make sure you have installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/pjrustia/sweep_dreams.git
+   git clone https://github.com/ngaza/SweepDreams.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd sweep_dreams
+   cd SweepDreams
    ```
 
 3. Install the project dependencies:
@@ -64,6 +64,10 @@ Before running the application, make sure you have installed:
 
 The application will now be running locally.
 
+The server listens on `127.0.0.1`, so the demo is accessed from the same computer. These commands start the local application. `npm run build` creates frontend files on disk and does not publish them.
+
+For Administrator Login, use `sweep-dreams-class-demo` unless you have set a custom `ADMIN_KEY` in `backend/.env`. Stop the demo with Ctrl+C. Demo accounts, bookings, and photos reset when the server stops. The first run may download the MongoDB binary used by the temporary database.
+
 ## Database Configuration
 
 Sweep Dreams supports both temporary and persistent MongoDB storage.
@@ -86,7 +90,7 @@ The application automatically starts a temporary local MongoDB instance using `m
 
 To use persistent database storage:
 
-1. Create a copy of `.env.example` and rename it to `.env`.
+1. Copy `backend/.env.example` to `backend/.env`.
 2. Configure the following environment variables:
 
    ```env
@@ -94,7 +98,7 @@ To use persistent database storage:
    ADMIN_KEY=your_secure_admin_key
    ```
 
-3. Make sure your MongoDB service or MongoDB Atlas database is running.
+3. Make sure your local MongoDB service is running.
 4. Start the application:
 
    ```bash
@@ -329,24 +333,9 @@ These features may be considered for future development and system improvements.
 
 For actual service operations, the team must also establish cleaner screening procedures, confirm service rates, obtain necessary dormitory permissions, and implement appropriate customer privacy and data-retention policies.
 
-## Deployment
-
-The project includes Vercel configuration for deployment.
-
-Before deploying the application:
-
-1. Connect the GitHub repository to Vercel.
-2. Configure the required environment variables.
-3. Set up a persistent MongoDB database.
-4. Configure the production administrator key.
-5. Verify the frontend and backend API connections.
-6. Test customer registration, booking, administrator access, and booking updates after deployment.
-
-See `DEPLOYMENT.md` for additional deployment instructions.
-
 ## Project Repository
 
-GitHub: https://github.com/pjrustia/sweep_dreams
+GitHub: https://github.com/ngaza/SweepDreams
 
 ## Project Team
 

@@ -1,13 +1,13 @@
 import express from "express";
-import { installAuth } from "./routes/authRoutes.js";
-import { createBookingModel } from "./models/bookingModel.js";
-import { createBookingAccess } from "./middleware/bookingAccess.js";
-import { errorHandler } from "./middleware/errorHandler.js";
-import { installConfigRoutes } from "./routes/configRoutes.js";
-import { installBookingRoutes } from "./routes/bookingRoutes.js";
-import { installCleanerRoutes } from "./routes/cleanerRoutes.js";
-import { installAdminRoutes } from "./routes/adminRoutes.js";
-export { checklist } from "./config/services.js";
+import { installAuth } from "./shared/routes/authRoutes.js";
+import { createBookingModel } from "./shared/models/bookingModel.js";
+import { createBookingAccess } from "./shared/middleware/bookingAccess.js";
+import { errorHandler } from "./shared/middleware/errorHandler.js";
+import { installConfigRoutes } from "./shared/routes/configRoutes.js";
+import { installBookingRoutes } from "./user/bookingRoutes.js";
+import { installCleanerRoutes } from "./cleaner/cleanerRoutes.js";
+import { installAdminRoutes } from "./admin/adminRoutes.js";
+export { checklist } from "./shared/config/services.js";
 
 export async function createApp(db, adminKey) {
   const app = express();

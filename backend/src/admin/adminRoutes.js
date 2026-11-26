@@ -1,4 +1,4 @@
-import { createAdminController } from "../controllers/adminController.js";
+import { createAdminController } from "./adminController.js";
 export function installAdminRoutes(app, bookings, access) {
   const { admin } = access;
   const controllers = createAdminController(bookings);

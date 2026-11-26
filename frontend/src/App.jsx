@@ -7,225 +7,73 @@ import AdminLogin from "./pages/AdminLogin.jsx";
 import AuthView from "./pages/AuthView.jsx";
 import ServiceView from "./pages/ServiceView.jsx";
 import HomeView from "./pages/HomeView.jsx";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./styles/style.css";
 import "./styles/mobile.css";
 import Navigation from "./components/Navigation.jsx";
-import { api } from "./api/client.js";
+import { useAppState } from "./hooks/useAppState.js";
 import "./styles/responsive.css";
 import "./styles/quality.css";
 
-const route = () => {
-  const id = location.hash.slice(1);
-  return [
-    "start",
-    "home",
-    "detail",
-    "book",
-    "track",
-    "admin",
-    "admin-login",
-    "login",
-    "signup",
-    "cleaner",
-  ].includes(id)
-    ? id
-    : "home";
-};
-const PROTECTED = ["book", "track", "cleaner"];
-export default function App() {
-  const [tab, setTab] = useState(route),
-    [config, setConfig] = useState(null),
-    [error, setError] = useState(""),
-    [busy, setBusy] = useState(false),
-    [message, setMessage] = useState("");
-  const [authRole, setAuthRole] = useState("customer");
-  const [user, setUser] = useState(null),
-    [authChecked, setAuthChecked] = useState(false),
-    [accountBookings, setAccountBookings] = useState([]);
-  useEffect(() => {
-    api("/auth/me")
-      .then((data) => setUser(data.user))
-      .catch(() => {})
-      .finally(() => setAuthChecked(true));
-  }, []);
-  const [availability, setAvailability] = useState(null);
-  const [search, setSearch] = useState(""),
-    [category, setCategory] = useState("All");
-  const [step, setStep] = useState(1),
-    [form, setForm] = useState({
-      serviceId: "basic",
-      addons: [],
-      paymentMethod: "cash",
-      size: "small",
-      date: "",
-      time: "09:00",
-      name: "",
-      contact: "",
-      room: "",
-      notes: "",
-    });
-  const [booking, setBooking] = useState(null);
-  const [adminKey, setAdminKey] = useState(""),
-    [rows, setRows] = useState([]),
-    [rating, setRating] = useState(5),
-    [comment, setComment] = useState("");
-  useEffect(() => {
-    api("/config")
-      .then(setConfig)
-      .catch((e) => setError(e.message));
-  }, []);
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [tab, step]);
-  const run = async (fn) => {
-    setBusy(true);
-    setError("");
-    setMessage("");
-    try {
-      await fn();
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setBusy(false);
-    }
-  };
-  const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const svc = config?.services.find((s) => s.id === form.serviceId);
-  const total = svc
-    ? (svc.sized ? config.prices[form.size] : svc.price) +
-      form.addons.reduce(
-        (n, id) => n + (config.addons.find((a) => a.id === id)?.price || 0),
-        0,
-      )
-    : 0;
-  const toggleAddon = (id) =>
-    setForm({
-      ...form,
-      addons: form.addons.includes(id)
-        ? form.addons.filter((x) => x !== id)
-        : [...form.addons, id],
-    });
-  const load = (id) =>
-    run(async () => {
-      setBooking(null);
-      setBooking(await api("/bookings/" + id));
-    });
-  const refreshAdmin = async (k) =>
-    setRows(
-      await api("/admin/bookings", {
-        headers: { Authorization: "Bearer " + k },
-      }),
-    );
-  const update = (b, status) =>
-    run(async () => {
-      await api("/admin/bookings/" + b.id, {
-        method: "PATCH",
-        headers: { Authorization: "Bearer " + adminKey },
-        body: JSON.stringify({ status }),
-      });
-      await refreshAdmin(adminKey);
-      setMessage("Booking updated.");
-    });
-  const go = (id, role) => {
-    if (role) setAuthRole(role);
-    if (!["admin", "admin-login"].includes(id)) {
-      setAdminKey("");
-      setRows([]);
-    }
-    location.hash = id;
-    setTab(id);
-    setError("");
-    setMessage("");
-    window.scrollTo(0, 0);
-  };
-  useEffect(() => {
-    if (tab === "admin" && !adminKey) {
-      location.hash = "admin-login";
-      setTab("admin-login");
-    }
-    if (!["admin", "admin-login"].includes(tab)) {
-      setAdminKey("");
-      setRows([]);
-    }
-  }, [tab, adminKey]);
-  useEffect(() => {
-    const sync = () => {
-      if (location.hash === "#main-content") return;
-      setTab(route());
-      setError("");
-    };
-    window.addEventListener("hashchange", sync);
-    return () => window.removeEventListener("hashchange", sync);
-  }, []);
-  // Login is required to book or view bookings.
-  useEffect(() => {
-    if (authChecked && !user && PROTECTED.includes(tab)) {
-      try {
-        sessionStorage.setItem("after-login", tab);
-      } catch {}
-      location.hash = "login";
-      setTab("login");
-      setMessage("Please log in or sign up to book a clean.");
-    }
-  }, [authChecked, user, tab]);
-  useEffect(() => {
-    if (authChecked && user) {
-      if (user.role === "cleaner" && ["book", "track"].includes(tab))
-        go("cleaner");
-      else if (user.role !== "cleaner" && tab === "cleaner") go("track");
-    }
-  }, [authChecked, user, tab]);
-  useEffect(() => {
-    if (tab === "track" && user)
-      api("/account/bookings")
-        .then(setAccountBookings)
-        .catch((e) => setError(e.message));
-  }, [tab, user]);
-  useEffect(() => {
-    if (!form.date) {
-      setAvailability(null);
-      return;
-    }
-    let current = true;
-    setAvailability(null);
-    api("/availability?date=" + form.date)
-      .then((data) => {
-        if (current) setAvailability(data);
-      })
-      .catch((e) => {
-        if (current) setError(e.message);
-      });
-    return () => {
-      current = false;
-    };
-  }, [form.date, tab]);
-
-  useEffect(() => {
-    if (tab !== "admin" || !adminKey) return;
-    let active = true;
-    const poll = async () => {
-      try {
-        const data = await api("/admin/bookings", {
-          headers: { Authorization: "Bearer " + adminKey },
-        });
-        if (active) setRows(data);
-      } catch (e) {
-        if (active) setError(e.message);
-      }
-    };
-    const timer = setInterval(poll, 2000);
-    return () => {
-      active = false;
-      clearInterval(timer);
-    };
-  }, [tab, adminKey]);
-
-  const loadingScreen = (
+function LoadingScreen() {
+  return (
     <section className="loading-state" role="status">
       <p>Loading…</p>
     </section>
   );
+}
+
+export default function App() {
+  const {
+    tab,
+    setTab,
+    config,
+    error,
+    setError,
+    busy,
+    message,
+    setMessage,
+    authRole,
+    setAuthRole,
+    user,
+    authChecked,
+    accountBookings,
+    setAccountBookings,
+    availability,
+    search,
+    setSearch,
+    category,
+    setCategory,
+    step,
+    setStep,
+    form,
+    setForm,
+    booking,
+    setBooking,
+    adminKey,
+    setAdminKey,
+    rows,
+    setRows,
+    rating,
+    setRating,
+    comment,
+    setComment,
+    run,
+    change,
+    svc,
+    total,
+    toggleAddon,
+    load,
+    refreshAdmin,
+    update,
+    go,
+    logoutAdmin,
+    logout,
+    retryConfig,
+    loginAdmin,
+    handleAuthSuccess,
+    chooseService,
+  } = useAppState();
 
   return (
     <div className={"app-shell screen-" + tab}>
@@ -237,21 +85,9 @@ export default function App() {
         authRole={authRole}
         go={go}
         adminKey={adminKey}
-        adminLogout={() => {
-          setAdminKey("");
-          setRows([]);
-          go("admin-login");
-        }}
+        adminLogout={logoutAdmin}
         user={user}
-        logout={() =>
-          run(async () => {
-            await api("/auth/logout", { method: "POST" });
-            setUser(null);
-            setAccountBookings([]);
-            setBooking(null);
-            go("home");
-          })
-        }
+        logout={logout}
       />
       <main id="main-content" tabIndex={-1}>
         {error && (
@@ -268,25 +104,12 @@ export default function App() {
           <section className="loading-state" role="status">
             <h1>Getting your space ready…</h1>
             <p>Loading Sweep Dreams</p>
-            <button
-              className="secondary"
-              onClick={() => run(async () => setConfig(await api("/config")))}
-            >
+            <button className="secondary" onClick={retryConfig}>
               Try again
             </button>
           </section>
         ) : tab === "admin-login" || (tab === "admin" && !adminKey) ? (
-          <AdminLogin
-            busy={busy}
-            go={go}
-            onLogin={(k) =>
-              run(async () => {
-                await refreshAdmin(k);
-                setAdminKey(k);
-                go("admin");
-              })
-            }
-          />
+          <AdminLogin busy={busy} go={go} onLogin={loginAdmin} />
         ) : ["login", "signup"].includes(tab) ? (
           <AuthView
             key={tab}
@@ -294,39 +117,20 @@ export default function App() {
             initialRole={authRole}
             onRoleChange={setAuthRole}
             go={go}
-            onSuccess={(u) => {
-              setUser(u);
-              setForm({ ...form, name: u.name, contact: u.email });
-              setBooking(null);
-              let next = "track";
-              try {
-                next = sessionStorage.getItem("after-login") || "track";
-                sessionStorage.removeItem("after-login");
-              } catch {}
-              go(
-                u.role === "cleaner"
-                  ? "cleaner"
-                  : next === "cleaner"
-                    ? "track"
-                    : next,
-              );
-            }}
+            onSuccess={handleAuthSuccess}
           />
         ) : tab === "cleaner" ? (
           authChecked && user?.role === "cleaner" ? (
             <CleanerView config={config} />
           ) : (
-            loadingScreen
+            <LoadingScreen />
           )
         ) : tab === "start" ? (
           <WelcomePage go={go} />
         ) : tab === "home" ? (
           <HomeView
             config={config}
-            choose={(id) => {
-              setForm({ ...form, serviceId: id, addons: [] });
-              go("detail");
-            }}
+            choose={chooseService}
             booking={booking}
             search={search}
             setSearch={setSearch}
@@ -343,7 +147,7 @@ export default function App() {
           />
         ) : tab === "book" ? (
           !authChecked || !user || !svc ? (
-            loadingScreen
+            <LoadingScreen />
           ) : (
             <BookingPage
               config={config}
@@ -366,7 +170,7 @@ export default function App() {
           )
         ) : tab === "track" ? (
           !authChecked || !user ? (
-            loadingScreen
+            <LoadingScreen />
           ) : (
             <TrackingPage
               accountBookings={accountBookings}

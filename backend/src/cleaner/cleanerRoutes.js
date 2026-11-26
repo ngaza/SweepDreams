@@ -1,4 +1,4 @@
-import { createCleanerController } from "../controllers/cleanerController.js";
+import { createCleanerController } from "./cleanerController.js";
 export function installCleanerRoutes(app, bookings, access) {
   const { cleanerOnly } = access;
   const controllers = createCleanerController(bookings);

@@ -1,4 +1,4 @@
-import { createAdminGuard } from "./admin.js";
+import { createAdminGuard } from "../../admin/admin.js";
 export function createBookingAccess(bookings, adminKey) {
   const admin = createAdminGuard(
     adminKey,

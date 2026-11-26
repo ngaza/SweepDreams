@@ -1,4 +1,4 @@
-import { connectDatabase } from "./config/database.js";
+import { connectDatabase } from "./shared/config/database.js";
 import { randomBytes } from "node:crypto";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";

@@ -1,4 +1,4 @@
-import { createBookingController } from "../controllers/bookingController.js";
+import { createBookingController } from "./bookingController.js";
 export function installBookingRoutes(app, bookings, access) {
   const { requireAuth, customer, own } = access;
   const controllers = createBookingController(bookings);

@@ -1,4 +1,4 @@
-import { createAdminGuard } from "../middleware/admin.js";
+import { createAdminGuard } from "../../admin/admin.js";
 import { createUserModel } from "../models/userModel.js";
 import { createSessionMiddleware } from "../middleware/session.js";
 import { createAuthLimiter } from "../middleware/authLimit.js";
